@@ -1,0 +1,93 @@
+数据结构:
+	物理性:数组(import numpy),链表
+	逻辑性:栈,队列(import Queue),堆,树
+时间复杂度:
+	O(1)<logn<n<nlogn<n^2
+	Logn:	二分搜索, 一个程序将一个大的问题分解成一系列更小的问题，每一步都将问题的规模缩减成几分之一，
+数组Array:
+	1.可以导入数组的包,numpy
+		import numpy
+		Numpy.array()
+	2.占据一片连续的内存
+
+	3.在python里没有数组类型.与列表类似,底层用列表实现存储数据.有索引
+	4.数组的方法:增删改查
+        1.创建类:class Array,
+            维护内存大小&数组长度属性:self.array=[None]*capacity
+                                                  Self.size=0
+        2.插入:O(n) index[优化后时间复杂度由O(n)降低为O(1)]
+            1.	边界条件
+            2.	扩容:当索引大于内存或者有效长度大于内存
+            3.	利用切片,将数组插入位置index到结尾的有效元素整体往后挪一位:L[index+1:size+1]=L[index:size].L[index]=插入值O(1)
+            4.	倒着遍历,O(n)
+            5.	长度加一
+        3.删除:遍历数组(删除下标)index到末尾),[i]=[i+1].覆盖index值
+        4.扩容:由于数组的增加会导致数组的内存大小不够,这是需要对内存扩容
+            	创建新的内存大小为原来俩倍.
+            	遍历原数组.将旧内存元素更新到新数组.重新更新内存对象
+
+
+
+
+class Array:#列表来实现数组
+    def __init__(self,capacity):#参数是容量
+        # 内存大小
+        self.array=[None]*capacity
+        self.size=0#有效值长度
+    # def __repr__(self):
+    #     return "{}".format(self.array)
+    def output(self):
+        for i in range(self.size):
+            print(self.array[i])
+
+    def insert(self,index,element):
+        #边界条件:索引值小于1
+        if index<0 or index>self.size:
+            raise IndexError("索引越界")
+        # 扩容条件:索引值大于内存大小,或者有效值的长度大于内存的大小
+        if index>=len(self.array) or self.size>=len(self.array):
+            self.addcapacity()
+        #第一种插入 从索引位置开始往后挪一位
+        # for i in range(self.size-1,index-1,-1):
+            # 从索引位置开始往后挪一位
+            # self.array[i+1]=self.array[i]
+        #  第二种:时间复杂度降低为O(1)利用切片将index后面的有效元素都后移一位
+        self.array[index+1:self.size+1]=self.array[index:self.size]
+        # 索引位置等于添加的元素,
+        self.array[index]=element
+        self.size+=1
+    def remove(self,index):
+#       判断是否越界
+        if index<0:
+            raise IndexError("The index is out of range")
+#         遍历
+        for i in range(index,self.size):
+            self.array[i]=self.array[i+1]
+        self.size-=1
+    def addcapacity(self):
+        # 创建新数组为原内存俩倍
+        new_array=[None]*len(self.array)*2
+        # 遍历有效值长度
+        for i in range(len(self.array)):
+            # 将旧地址元素复制到新内存里
+            new_array[i]=self.array[i]
+        #     使用新数组
+        self.array=new_array
+
+if __name__ == '__main__':
+
+    a=Array(3)
+    a.insert(0,0)
+    a.insert(1,1)
+    a.insert(2,2)
+    a.insert(3,3)
+    a.insert(2,9)
+    # a.remove(2)
+    # a.addcapacity()
+    print(a.array)
+    # a.output()
+    # print('----')
+    # print(a.size)
+
+
+
