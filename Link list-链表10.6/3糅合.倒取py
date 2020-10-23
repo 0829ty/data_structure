@@ -1,0 +1,138 @@
+class Node:
+    def __init__(self,data):
+        self.data=data
+        self.next=None
+    def __repr__(self):
+        # return "Node({})".format(self.data)
+        return  "Node(%s)"%(self.data)
+        # return f"Node(self.data)"
+
+# index 从0开始
+class Linklist:
+    def __init__(self):
+        self.head=None
+        self.tail=None
+        self.size=0
+    def get(self,index):
+        # 从0开始到index 记录头结点
+        temp=self.head
+        # 遍历到索引位置
+        for _ in range(index):
+            temp=temp.next
+        return temp
+    def insert(self,index , data):
+        new_node=Node(data)
+    #     边界:
+        if index<0 or index>self.size:
+            raise IndexError("The index is out of range")
+        # 空链表
+        elif self.size==0:
+            self.head=new_node
+            self.tail=new_node
+        # 头部添加
+        elif index==0:
+            new_node.next=self.head
+            self.head=new_node
+    #     尾部添加
+        elif index==self.size:
+            self.tail.next=new_node
+            self.tail=new_node
+    #     中间插入
+        else:
+            pre=self.get(index-1)
+            new_node.next=pre.next
+            pre.next=new_node
+        self.size+=1
+        return self.size
+
+
+    def Link(self ,obj : list):
+        self.head=Node(obj[0])
+        self.size=1
+        temp=self.head
+        for i in obj[1:]:
+            new_node=Node(i)
+            temp.next=new_node
+            temp=temp.next
+            self.size+=1
+
+    def remove(self,index):
+    #     边界问题self.size 从0 开始
+        if index<0 or index>=self.size:
+            raise IndexError("索引越界")
+        elif index==0:
+            remove_node=self.head
+            self.head=self.head.next
+            remove_node.next=None
+        elif index==self.size-1:
+            remove_node=self.tail
+            pre=self.get(index-1)
+            pre.next=None
+            self.tail=pre
+        else:
+            prev=self.get(index-1)
+            remove_node=prev.next
+            prev.next=prev.next.next
+            remove_node.next=None
+        self.size-=1
+
+
+#翻转:\
+    def reverse(self):
+        pre = None  # 变量pre记录前一个
+        cur = self.head  # cur记录当前位置
+        while cur:
+            # next_node记录下一步
+            next_node = cur.next
+            # 转向
+            cur.next = pre
+            # 向前走一步
+            pre = cur
+            # 当前位置前进一步
+            cur = next_node
+        #     头部重置
+        self.head = pre
+
+
+    def __repr__(self):# 把对象以字符串的形式表示出来s
+        curr=self.head
+        string=""
+        while curr:
+            string+="{}->".format(curr)
+            curr=curr.next
+        return string+"END"
+
+# 倒着取:
+#     def back_get(self,index):
+#         num=self.size-index-1
+#         curr=self.get(num)
+#         return curr
+    def get_back(self,k):
+        fast = self.head
+        slow = self.head
+        for i in range(k):
+            fast = fast.next
+        while fast:
+            fast = fast.next
+            slow = slow.next
+        return slow
+
+
+# n=Node(1)
+# print(n)
+s=Linklist()
+# print(s.get(2))
+
+# s.Link([1,2,3,4])
+# print(s.get(8))
+s.insert(0,5)
+s.insert(1,4)
+s.insert(2,3)
+s.insert(3,2)
+s.insert(4,1)
+# print(s.get(0))
+# print(s.size)
+# s.reverse()
+# s.insert(0,2.4)
+print(s.get_back(2))
+print(s)
